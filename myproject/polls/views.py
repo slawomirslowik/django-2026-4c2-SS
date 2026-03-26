@@ -35,4 +35,4 @@ def vote(request, question_id):
         return HttpResponseRedirect(reverse('polls:results', args=(question.id,)))
 
 def landingPage(request):
-    return HttpResponse("Hello, You're at the polls landing page. Available endpoints: admin, polls")c:\Users\sslowik\Documents\django-2026-4b2-SS\docs\7-Django-widoki.md
+    return HttpResponse("Hello, You're at the polls landing page. Available endpoints: admin, polls")
