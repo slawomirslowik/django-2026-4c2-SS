@@ -121,8 +121,91 @@ http://127.0.0.1:8000/admin/
 
 ---
 
-## Zadanie: Stwórz własny model
 
+---
+
+## Praca z konsolą Django i zabawa z API
+
+Po utworzeniu modeli możesz skorzystać z interaktywnej konsoli Pythona, aby poeksperymentować z API Django. Użyj polecenia:
+
+```
+py manage.py shell
+```
+
+To polecenie uruchamia konsolę z odpowiednimi ustawieniami Django (DJANGO_SETTINGS_MODULE), dzięki czemu możesz korzystać z modeli zdefiniowanych w aplikacjach.
+
+Przykłady operacji na modelach:
+
+```python
+# Brak pytań w systemie.
+>>> Question.objects.all()
+<QuerySet []>
+
+# Utwórz nowe pytanie.
+>>> from django.utils import timezone
+>>> q = Question(question_text="Co nowego?", pub_date=timezone.now())
+
+# Zapisz obiekt do bazy danych.
+>>> q.save()
+
+# Sprawdź ID pytania.
+>>> q.id
+1
+
+# Odczytaj wartości pól.
+>>> q.question_text
+"Co nowego?"
+>>> q.pub_date
+datetime.datetime(...)
+
+# Zmień wartość pola i zapisz.
+>>> q.question_text = "Co słychać?"
+>>> q.save()
+
+# Wyświetl wszystkie pytania.
+>>> Question.objects.all()
+<QuerySet [<Question: Co słychać?>]>
+
+# Przykłady zapytań:
+>>> Question.objects.filter(id=1)
+>>> Question.objects.filter(question_text__startswith="Co")
+
+# Pobierz pytanie opublikowane w bieżącym roku:
+>>> current_year = timezone.now().year
+>>> Question.objects.get(pub_date__year=current_year)
+
+# Obsługa wyjątku, gdy nie ma obiektu:
+>>> Question.objects.get(id=2)
+# Traceback... DoesNotExist
+
+# Skrócony zapis dla klucza głównego:
+>>> Question.objects.get(pk=1)
+
+# Sprawdź działanie własnej metody:
+>>> q = Question.objects.get(pk=1)
+>>> q.was_published_recently()
+
+# Dodaj kilka odpowiedzi (Choice):
+>>> q.choice_set.create(choice_text="Niewiele", votes=0)
+>>> q.choice_set.create(choice_text="Niebo", votes=0)
+>>> c = q.choice_set.create(choice_text="Znowu programuję", votes=0)
+
+# Odczytaj powiązania:
+>>> q.choice_set.all()
+>>> q.choice_set.count()
+
+# Przykład zapytania z relacją:
+>>> Choice.objects.filter(question__pub_date__year=current_year)
+
+# Usuń odpowiedź:
+>>> c = q.choice_set.filter(choice_text__startswith="Znowu")
+>>> c.delete()
+```
+
+Więcej informacji o relacjach i zapytaniach znajdziesz w dokumentacji Django.
+
+---
+## ZADANIE
 1. W pliku `polls/models.py` dodaj własny model `Category`, który będzie grupował poszczególne pytania (`Questions`).
 
 2. Utwórz migracje.
@@ -133,8 +216,9 @@ http://127.0.0.1:8000/admin/
 
 ---
 
-**Nie podawaj od razu rozwiązania – spróbuj samodzielnie zaprojektować model Category oraz powiązanie z Question.**
+**Spróbuj samodzielnie zaprojektować model Category oraz powiązanie z Question.**
 
 ---
 
 **Manual oraz zadanie przygotowane zgodnie z tutorialem Django cz. 2.**
+https://docs.djangoproject.com/en/6.0/intro/tutorial02/

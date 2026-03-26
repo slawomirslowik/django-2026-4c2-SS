@@ -18,6 +18,8 @@ from django.contrib import admin
 from django.urls import path, include
 from polls import views
 
+app_name = "polls"
+
 urlpatterns = [
     path('', views.landingPage, name='landingPage'),
     path('admin/', admin.site.urls),
